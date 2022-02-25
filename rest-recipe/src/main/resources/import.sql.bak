@@ -1,0 +1,1 @@
+INSERT INTO recipe(id, title, userid,author,cuisine,course,tags,info,directions,source,prep_time,cook_time,servings) VALUES (nextval('hibernate_sequence'), 'Banana Bread', '321','Natalie Allen','Mexican','Dinner','tag1','Sample Info','Description1','Source',10,20,5);

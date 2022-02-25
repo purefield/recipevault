@@ -1,0 +1,16 @@
+{
+  "author": "string",
+  "cook_time": 0,
+  "course": "string",
+  "cuisine": "string",
+  "directions": "string",
+  "image_name": "blueberry_kuechen.jpg",
+  "description": "string",
+  "ingredients": ["ing0", "ing1", "ing2"],
+  "prep_time": 0,
+  "servings": 0,
+  "source": "string",
+  "tags": "string",
+  "title": "string",
+  "userid": "string"
+}
