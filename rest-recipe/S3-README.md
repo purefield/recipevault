@@ -20,11 +20,8 @@ geoallen1-mac:openeats-quarkus geoallen$ aws s3 ls --endpoint-url=http://localho
 geoallen1-mac:openeats-quarkus geoallen$ 
 
 
-
-
-
-Extra Commands
-aws s3 ls --endpoint-url=http://localhost:4566 --bucket=recipe-images
+List All Images in Bucket
+aws s3 ls --endpoint-url=http://localhost:4566 s3://recipe-images
 
 aws --endpoint-url=http://localhost:4566 s3api put-bucket-acl --bucket recipe-images --acl public-read
 

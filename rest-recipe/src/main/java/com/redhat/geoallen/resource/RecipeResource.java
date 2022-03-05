@@ -60,10 +60,7 @@ public class RecipeResource extends CommonResource {
     @Inject
    Logger log; 
 
-   @ConfigProperty(name = "image.persist.strategy")
-    String persistStrategy;
 
-    
 
     @GET
     public List<Recipe> get() {
@@ -104,6 +101,11 @@ public class RecipeResource extends CommonResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response uploadFile(@MultipartForm RecipeFormData formData) throws Exception {
 
+        Recipe newDTORecipe = null;
+
+        
+            
+
         //log.info(formData.title);
         log.info(formData.fileName);
         log.info(formData.mimeType);
@@ -120,43 +122,33 @@ public class RecipeResource extends CommonResource {
                     return Response.status(Status.BAD_REQUEST).build();
                 }
                 
-                if (persistStrategy.equals("S3")) {
-                PutObjectResponse putResponse = s3.putObject(buildPutRequest(formData),
-                        RequestBody.fromFile(uploadToTemp(formData.data)));
-                }
-
-                if (persistStrategy.equals("LOCAL")) {
-                    saveLocal(formData.data,formData.fileName, formData.mimeType);
-
-                }
-
-                //if (putResponse != null) {
-                    // if the S3 completed successfully, use the url in the recipe info
-                    //Should we add S3 URL location to the record or just calcuate URL?
-                    //http://recipe-images.localhost:4566/recipe-images/Fuse_79_Components.png
-                
-                
-    
             
-            //Recipe newRecipe =  new Recipe(formData);
+                PutObjectResponse putResponse = s3.putObject(buildPutRequest(formData),
+                RequestBody.fromFile(uploadToTemp(formData.data)));
+       
+                if (putResponse != null) {
 
-            String recipeJSON = formData.recipe;
-            ObjectMapper objectMapper = new ObjectMapper();
-            RecipeDTO recipeDTO = objectMapper.readValue(recipeJSON, RecipeDTO.class);
+                    String recipeJSON = formData.recipe;
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    RecipeDTO recipeDTO = objectMapper.readValue(recipeJSON, RecipeDTO.class);
 
-            log.info("From DTO: " + recipeDTO.title);
+                    log.info("From DTO: " + recipeDTO.title);
 
-            Recipe newDTORecipe = new Recipe(recipeDTO, formData.fileName);
+                    newDTORecipe = new Recipe(recipeDTO, formData.fileName);
 
-            newDTORecipe.persist();
+                    newDTORecipe.persist();
 
-            return Response.ok(newDTORecipe).status(Status.CREATED).build();
+
+                    return Response.ok(newDTORecipe).status(Status.CREATED).build();
         
-        /** TODO - Need to make this a try - catch
-        else {
-            return Response.serverError().build();
-        } 
-        */
+                 }
+              
+    
+             else {
+                    log.info(toString());
+                     return Response.serverError().build();
+             }
+
     }
 
 
@@ -184,17 +176,6 @@ public class RecipeResource extends CommonResource {
 
         //log.info(updatedRecipe.title);
         //log.info(updatedRecipe.fileName);
-
-        /*Map<String, Object> parameters = new HashMap<>();
-        addIfNotNull(parameters, "title", updatedRecipe.title );
-        //addIfNotNull(parameters, "id", String.valueOf(id) );
-         addIfNotNull(parameters, "status", status );
-        addIfNotNull(parameters, "email", email ); */
-
-
-        /*String query = parameters.entrySet().stream()
-            .map( entry -> entry.getKey() + "=:" + entry.getKey() )
-            .collect( Collectors.joining(" and ") );*/
 
         
         existingRecipe.title = recipeDTO.title;
@@ -242,18 +223,13 @@ public class RecipeResource extends CommonResource {
         }
 
         // if using S3
-        if (entity.image_name != null && persistStrategy.equals("S3")) {
+        if (entity.image_name != null)  {
         deleteResponse = s3.deleteObject(buildDeleteRequest(entity.image_name));
         log.info(deleteResponse.toString());
         }
 
-        // if using file storage
-        if (entity.image_name != null && persistStrategy.equals("LOCAL")) {
-        fileDeleted = deleteLocal(entity.image_name);
-            }
-
         // if either were successfull, delete the DB entity
-        if (deleteResponse != null || fileDeleted) {
+        if (deleteResponse != null) {
         entity.delete(); 
         }
     return Response.status(204).build();

@@ -33,17 +33,6 @@ abstract public class CommonResource {
     @ConfigProperty(name = "bucket.name")
     String bucketName;
 
-    @ConfigProperty(name = "persist.path")
-    String persistPath;
-
-     
-    
-    
-    
-
-   
-
-    
     protected PutObjectRequest buildPutRequest(RecipeFormData formData) {
         return PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -83,38 +72,5 @@ abstract public class CommonResource {
         return tempPath;
     }
 
-    protected void saveLocal(InputStream data, String fileName, String mimeType) {
-
-            String suffix = mimeType.split("/")[1];
-            log.info("filename: "+ fileName);
-            log.info("suffix: "+ suffix);
-
-            File file = new File(persistPath + fileName);
-
-            try {
-                
-                Files.copy(data, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-
-    }
-
-    protected boolean deleteLocal(String fileName) {
-
-        log.info("filename: "+ fileName);
-        boolean isDeleted = false;
-
-        File file = new File(persistPath + fileName);
-
-        try {
-            
-         isDeleted = Files.deleteIfExists(file.toPath());
-         log.info("File Deleted: " + isDeleted);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-         return isDeleted;
-
-}
+    
 }
