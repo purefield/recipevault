@@ -49,14 +49,15 @@ In this mode you can make changes to the code and have the changes immediately a
 
 ### Build and Deploy to OpenShift
 
-geoallen1-mac:recipevault-backend geoallen$ oc project
+
 Using project "recipevault-dev" on server "https://api.cluster-p889x.p889x.sandbox741.opentlc.com:6443".
 geoallen1-mac:recipevault-backend geoallen$ ./mvnw clean package -DskipTests -Dquarkus.kubernetes.deploy=true
 
-
+Build the Jar
+mvn clean package -DskipTests -Dquarkus.package.type=uber-jar
 
 Build a docker image:
-`docker build -f src/main/docker/Dockerfile.native -t quarkus/amazon-s3-quickstart .`
+`docker build -f src/main/docker/Dockerfile.jvm -t quay.io/geoallen/rest-recipe .`
 
 mvn clean package -DskipTests -Dquarkus.package.type=uber-jar
 

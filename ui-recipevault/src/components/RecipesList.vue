@@ -106,7 +106,7 @@ export default {
   },
   mounted() {
     this.retrieveRecipes();
-    this.image_url = process.env.VUE_APP_IMAGE_SERVER_URL
+    this.image_url = window.VUE_APP_IMAGE_SERVER_URL
   }
 };
 
