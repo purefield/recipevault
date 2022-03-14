@@ -20,19 +20,7 @@ yarn build
 yarn lint
 ```
 
-
 ### Local Testing
-
-
-docker run -d --name nginx -p 8080:8080 -v /Users/geoallen/Developer/recipevault/dist:/opt/app-root/src:Z registry.access.redhat.com/ubi8/nginx-118 nginx -g "daemon off;"
-
-docker run -d --name nginx -p 8081:8081 -v /Users/geoallen/Developer/recipevault/dist:/opt/app-root/src:Z registry.access.redhat.com/ubi8/nginx-118 nginx -g "daemon off;"
-
-
-docker run -d --name recipevault-frontend -p 8080:8080 localhost/recipevault-frontend nginx -g "daemon off;"
-
-podman run -d --name recipevault-frontend -p 8080:8080 localhost/recipevault-frontend nginx -g "daemon off;"
-
 
 ### Deploy to OpenShift
 
@@ -49,6 +37,8 @@ yarn build or npm run build
 This outputs to /dist
 
 ## Build Container Image
+
+podman build  -t recipevault-frontend -f Containerfile .
 
 podman build  -t quay.io/geoallen/recipevault-frontend:stage -f Containerfile .
 
