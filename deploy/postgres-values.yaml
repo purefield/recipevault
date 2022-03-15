@@ -1,9 +1,0 @@
-volumePermissions:
-  enabled: false
-  securityContext:
-    runAsUser: "auto"
-
-securityContext:
-  enabled: false
-    
-

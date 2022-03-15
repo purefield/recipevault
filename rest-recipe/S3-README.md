@@ -7,35 +7,34 @@ This example showcases how to use the AWS S3 client with Quarkus. As a prerequis
 `podman run --rm --name local-s3 -p 4566:4566 -p 4572:4572 -e SERVICES=s3 -e START_WEB=0 -d localstack/localstack`
 
 #create bucket
-`aws s3 mb s3://recipe-images --endpoint-url=http://localhost:4566`
-
+`aws s3 mb s3://geoallen.recipevault.dev.images --endpoint-url=http://localhost:4566`
+make_bucket: geoallen.recipevault.dev.images
 # Confirm 'recipe-images' Bucket is listed
 `aws s3 ls --endpoint-url=http://localhost:4566`
+2022-01-14 10:01:21 geoallen.recipevault.dev.images
 
 
-geoallen1-mac:openeats-quarkus geoallen$ aws s3 mb s3://recipe-images --endpoint-url=http://localhost:4566
-make_bucket: recipe-images
-geoallen1-mac:openeats-quarkus geoallen$ aws s3 ls --endpoint-url=http://localhost:4566
-2022-01-14 10:01:21 recipe-images
-geoallen1-mac:openeats-quarkus geoallen$ 
-
-
-List All Images in Bucket
-aws s3 ls --endpoint-url=http://localhost:4566 s3://recipe-images
+# Helpful List All Images in Bucket
+aws s3 ls --endpoint-url=http://localhost:4566 s3://geoallen.recipevault.dev.images
 
 aws --endpoint-url=http://localhost:4566 s3api put-bucket-acl --bucket recipe-images --acl public-read
 
-docker start local-s3
-docker stop local-s3
-
-aws s3api delete-object --bucket recipe-images --key test-filename.jpg --endpoint-url http://localhost:4566
+aws s3api delete-object --bucket geoallen.recipevault.dev.images --key blueberry_kuechen.jpg --endpoint-url http://localhost:4566
 
 https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html
 
 https://aws.amazon.com/premiumsupport/knowledge-center/read-access-objects-s3-bucket/
 
 
-Create an AWS profile for your local instance using AWS CLI:
+# Start REST Service
+
+
+
+
+
+
+
+** Create an AWS profile for your local instance using AWS CLI:
 
 ```
 $ aws configure --profile localstack
