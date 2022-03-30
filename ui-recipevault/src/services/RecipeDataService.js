@@ -75,7 +75,7 @@ class RecipeDataService {
   }
 
   findByTitle(title) {
-    return http.get(`/recipes?name=${title}`);
+    return http.get(`/recipes/title/${title}`);
   }
 }
 

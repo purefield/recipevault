@@ -1,6 +1,23 @@
 <template>
   <div>
 
+        <div class="input-group mb-3" >
+        <input type="text" class="form-control" placeholder="Search by title"
+          v-model="title"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button"
+            @click="searchTitle"
+          >
+            Search
+          </button>
+          <button class="btn btn-outline-secondary" type="button"
+            @click="refreshList"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+     
  
 
             <ul class="list-group">
@@ -95,8 +112,7 @@ export default {
     searchTitle() {
       RecipeDataService.findByTitle(this.title)
         .then(response => {
-          this.recipe = response.data;
-          this.setActiveRecipe(null);
+          this.recipes = response.data;
           console.log(response.data);
         })
         .catch(e => {

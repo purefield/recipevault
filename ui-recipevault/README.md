@@ -71,7 +71,9 @@ oc get route
 
 
 
+## Ignorable Errors ##
 
+Uncaught TypeError: Cannot read properties of undefined (reading 'globalProperties')
 
 
 

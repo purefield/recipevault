@@ -54,9 +54,30 @@ public class RecipeEndpointTest {
 		.all(true)
 		.extract()
 		.response();
-	
+	}
+
+	@Test
+	public void findRecipeByTitle() {
+
+		Recipe recipe = getTestRecipe();
+		Response response =
+		
+	given()
+	.baseUri("http://localhost:8080/recipes/title")
+		// WHEN
+	.when()
+		.get("/{name}", recipe.title)
+		.then()
+		.assertThat()
+		.statusCode(200)
+		.log()
+		.all(true)
+		.extract()
+		.response();
 
 	}
+
+
 
 	@Test
 	public void createUpdateRecipe() {
@@ -154,37 +175,6 @@ public class RecipeEndpointTest {
 	}
 
 
-	  /*  @Test
-	public void recipePost()
-	{
-		// Creating a File instance 
-		File jsonDataInFile = new File("/Users/geoallen/Developer/openeats-quarkus/src/test/resources/payloads/full_recipe.json");
-		
-		Response response =
-		//GIVEN
-		    given()
-				.baseUri("http://localhost:8080/recipes")
-				.contentType(ContentType.JSON)
-				.body(jsonDataInFile)
-		// WHEN
-			.when()
-				.post()
-			.then()
-				.assertThat()
-				.statusCode(201)
-				.log()
-				.body()
-				.extract().
-        		response();
-			Integer id = response.path("id");
-			given()
-			.when().delete("http://localhost:8080/recipes/{id}", id)
-					.then()
-					.statusCode(204);
-
-	} */
-
-
 
 	public Recipe getTestRecipe()  {
 
@@ -202,7 +192,7 @@ public class RecipeEndpointTest {
 		recipe.author="Pat Smith";
 		recipe.cook_time = 60;
 		recipe.course ="Breakfast";
-		recipe.cuisine = "American";
+		recipe.cuisine = "Mexican";
 		recipe.directions = "Mix, Stir, Bake";
 
 		recipe.image_name = "test-filename.jpg";

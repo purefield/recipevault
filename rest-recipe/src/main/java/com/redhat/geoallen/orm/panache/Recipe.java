@@ -27,6 +27,7 @@ import com.redhat.geoallen.view.RecipeFormData;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
 import com.redhat.geoallen.view.RecipeDTO;
 
+
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity
@@ -38,7 +39,6 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 public class Recipe extends PanacheEntity {
 
     private static final Logger LOG = Logger.getLogger(Recipe.class);
-      
 
     @Column(length = 250)
     public String title;
@@ -151,6 +151,18 @@ public class Recipe extends PanacheEntity {
     public static List<Recipe> findByUserID(String userid){
         LOG.info("userid:" + userid);
         return list("userid", userid);
+    }
+
+    public static List<Recipe> searchTitle(String searchString){
+        
+        LOG.info("searchString: " + searchString);
+
+        return find("title", searchString).list();
+
+    }
+
+    public static List<Recipe> getLatestRecipes() {
+        return list("order by date DESC");
     }
     
 

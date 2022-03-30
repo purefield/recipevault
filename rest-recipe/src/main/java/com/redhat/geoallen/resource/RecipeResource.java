@@ -235,6 +235,23 @@ public class RecipeResource extends CommonResource {
     return Response.status(204).build();
 }
 
+  @GET
+    @Path("/title/{name}")
+    public List<Recipe> search(@PathParam("name") String name) {
+        log.info("search info: " + name);
+        String title = name;
+        return Recipe.searchTitle(title);
+    }  
+
+    @GET
+    @Path("/latest/}")
+    public List<Recipe> getLatest() {
+        
+        return Recipe.getLatestRecipes();
+    }  
+ 
+
+
     @Provider
     public static class ErrorMapper implements ExceptionMapper<Exception> {
 
