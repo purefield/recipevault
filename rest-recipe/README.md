@@ -49,6 +49,17 @@ In this mode you can make changes to the code and have the changes immediately a
     Hot reload works even when modifying your JPA entities.
     Try it! Even the database schema will be updated on the fly.
 
+
+# Run Tests
+
+
+# Load Sample Recipes
+
+
+
+
+
+
 # Run dev mode
 - Run `./mvnw clean package` and then `java -jar ./target/quarkus-app/quarkus-run.jar`
 - In dev mode `./mvnw clean quarkus:dev`

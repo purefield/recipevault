@@ -1,4 +1,5 @@
 <template>
+
   <div>
 
         <div class="input-group mb-3" >
@@ -17,10 +18,28 @@
           </button>
         </div>
       </div>
+
+
+<div class="card-group">
+
+
+    <div v-for="recipe in recipes" :key="recipe._id">
+  <div class="col">
+    <div class="card">
+      <img v-bind:src="image_url + recipe.image_name" class="card-img-top" width="240" height="160"/> 
+        <div class="card-body">
+            <h5 class="card-title">{{recipe.title}}</h5> 
+        </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
      
  
 
-            <ul class="list-group">
+      <ul class="list-group">
         <li class="list-group-item"
           :class="{ active: index == currentIndex }"
           v-for="(recipe, index) in recipes"
@@ -32,6 +51,8 @@
           {{ recipe.title }}
         </li>
       </ul>
+
+
 
 </div>
 
