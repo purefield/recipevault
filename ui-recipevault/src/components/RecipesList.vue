@@ -23,12 +23,14 @@
 <div class="card-group">
 
 
-    <div v-for="recipe in recipes" :key="recipe._id">
+<div v-for="(recipe, index) in recipes" :key="index"  @click="setActiveRecipe(recipe, index)">
   <div class="col">
     <div class="card">
       <img v-bind:src="image_url + recipe.image_name" class="card-img-top" width="240" height="160"/> 
         <div class="card-body">
             <h5 class="card-title">{{recipe.title}}</h5> 
+            
+            
         </div>
     </div>
   </div>
@@ -36,46 +38,34 @@
 </div>
 
 
-     
- 
-
-      <ul class="list-group">
-        <li class="list-group-item"
-          :class="{ active: index == currentIndex }"
-          v-for="(recipe, index) in recipes"
-          :key="index"
-          @click="setActiveRecipe(recipe, index)"
-        >
-        <img v-bind:src="image_url + recipe.image_name"/> 
-        
-          {{ recipe.title }}
-        </li>
-      </ul>
-
-
-
 </div>
 
-<div class="col-md-6">
-      <div v-if="currentRecipe">
-        <h4>Recipe</h4>
-        <div>
-          <label><strong>Title:</strong></label> {{ currentRecipe.title }}
-        </div>
-        <div>
-          <label><strong>Description:</strong></label> {{ currentRecipe.description }}
-        </div>
-        <div>
-          <label><strong>Status:</strong></label> {{ currentRecipe.published ? "Published" : "Pending" }}
-        </div>
 
-        <router-link :to="'/recipe/' + currentRecipe.id" class="badge badge-warning">Edit</router-link>
-      </div>
-      <div v-else>
-        <br />
-        <p>Please click on a Recipe...</p>
+
+<!-- Recipe Modal -->
+<div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+
+    <RecipeView v-if="component === 'RecipeView'" v-bind=currentRecipe />
+    <RecipeEdit v-if="component === 'RecipeEdit'" v-bind=currentRecipe />
+
+        
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      
+      <div class="modal-footer">
+       
+       <button type="button" class="btn btn-primary" tag="button" @click="setEditRecipe()">Edit</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        
+        
       </div>
     </div>
+  </div>
+    </div>
+  </div>
+
   
 
 </template>
@@ -85,10 +75,20 @@
 <script>
 import RecipeDataService from "../services/RecipeDataService";
 
+import RecipeEdit from "./RecipeEdit.vue";
+import RecipeView from "./RecipeView.vue";
+
+import { Modal } from 'bootstrap';
+
 export default {
   name: "recipe-list",
+  modal: null,
+  
+  components: { RecipeEdit,RecipeView },
   data() {
+    
     return {
+      component: "RecipeView",
       recipes: [],
       currentRecipe: null,
       currentIndex: -1,
@@ -117,8 +117,16 @@ export default {
     setActiveRecipe(recipe, index) {
       this.currentRecipe = recipe;
       this.currentIndex = recipe ? index : -1;
+      this.modal.show();
     },
 
+    setEditRecipe() {
+      console.log("setEditRecipe")
+      this.component = "RecipeEdit"
+      
+    },
+
+  
     removeAllRecipes() {
       RecipeDataService.deleteAll()
         .then(response => {
@@ -144,6 +152,7 @@ export default {
   mounted() {
     this.retrieveRecipes();
     this.image_url = window.VUE_APP_IMAGE_SERVER_URL
+    this.modal = new Modal(document.getElementById('recipeModal'))
   }
 };
 

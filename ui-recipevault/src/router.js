@@ -5,7 +5,7 @@ const routes =  [
   {
     path: "/recipe/:id",
     name: "recipe-details",
-    component: () => import("./components/Recipe")
+    component: () => import("./components/RecipeEdit")
   },
   {
     path: "/add",
