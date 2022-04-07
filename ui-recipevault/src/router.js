@@ -10,7 +10,7 @@ const routes =  [
   {
     path: "/add",
     name: "add",
-    component: () => import("./components/AddRecipe")
+    component: () => import("./components/RecipeCreate")
   },
   {
     path: "/recipes",

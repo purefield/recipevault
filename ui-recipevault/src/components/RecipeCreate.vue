@@ -1,25 +1,12 @@
 <template>
 
 
+<h2> Create New Recipe </h2>
 
-  <div class="submit-form">
+<div v-if="!submitted">
 
-<div>
-<label class="btn btn-default">
-  <input type="file" ref="file" @change="selectFile" />
-    </label>
-</div>
-
-    <div id="preview">
-    <img v-if="url" :src="url" />
-  </div>
-
-
-    <div v-if="!submitted">
-
-
-    
-      <div class="form-group">
+<div class="mb-3">
+ <div class="form-group">
         <label for="title">Title</label>
         <input
           type="text"
@@ -30,10 +17,24 @@
           name="title"
         />
       </div>
+</div>
 
+<div class="mb-3">
+  <label for="formFile" class="form-label">Recipe Image</label>
+  <input type="file" ref="file" class="form-control" @change="selectFile" />
+</div>
+
+<div class="mb-3">
+  <div id="preview">
+    <img v-if="url" :src="url" />
+  </div>
+</div>
+
+
+<div class="mb-3">
       <div class="form-group">
         <label for="description">Description</label>
-        <input
+        <textarea
           class="form-control"
           id="info"
           required
@@ -41,27 +42,57 @@
           name="info"
         />
       </div>
+</div>
 
-
+<div class="mb-3">
       <div class="form-group">
-        <label for="ingredients">Ingredients</label>
+        <label for="ingredients">Ingredients - 1 per line</label>
         <textarea
           class="form-control"
           id="info"
           required
           v-model="recipe.ingredient_list"
           name="ingredients"
+          rows="10"
         />
       </div>
+</div>
 
-      <button @click="saveRecipe" class="btn btn-success">Submit</button>
+<div class="hstack gap-2">
+
+            <div>
+             <strong>Prep Time:</strong>
+               <input type="text" class="form-control" id="prep_time" v-model=recipe.prep_time />
+            </div>
+
+              <div>
+              <strong>  Cook Time: </strong>
+              <input type="text" class="form-control" id="cook_time" v-model=recipe.cook_time />
+              </div>
+
+              <div>
+              <strong>  Servings: </strong>
+              <input type="text" class="form-control" id="servings" v-model=recipe.servings />
+              </div>
+
+              <div>
+              <strong>  Servings Unit: </strong>
+              <input type="text" class="form-control" id="serving_unit" v-model=recipe.serving_unit />
+              </div>
+
+        </div>
+
+      <button @click="saveRecipe" class="btn btn-success">Save Recipe</button>
+      
     </div>
+
+
 
     <div v-else>
       <h4>You submitted successfully!</h4>
       <button class="btn btn-success" @click="newRecipe">Add</button>
     </div>
-  </div>
+   
 </template>
 
 <script>

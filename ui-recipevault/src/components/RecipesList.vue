@@ -43,10 +43,10 @@
 
 
 <!-- Recipe Modal -->
-<div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipe" aria-hidden="true">
   
-        <RecipeView v-if="component === 'RecipeView'" />
-        <RecipeEdit v-if="component === 'RecipeEdit'" />
+        <RecipeView v-if="component === 'RecipeView'" @editMode="setEditRecipe" />
+        <RecipeEdit v-if="component === 'RecipeEdit'" @viewMode="setViewMode"/>
     
 
   </div>
@@ -115,6 +115,11 @@ export default {
 
     },
 
+    setViewMode () {
+    console.log("setViewMode")
+    this.component = "RecipeView"
+    },
+
   
     removeAllRecipes() {
       RecipeDataService.deleteAll()
@@ -142,6 +147,7 @@ export default {
     this.retrieveRecipes();
     this.image_url = window.VUE_APP_IMAGE_SERVER_URL
     this.modal = new Modal(document.getElementById('recipeModal'))
+    //this.modal.addEventListener("hidden.bs.modal", this.setViewMode(event))
   }
 };
 

@@ -20,9 +20,7 @@
       </div>
     </div>
 
-       
-
-<hr>
+      <hr>
 
          <div class="vstack gap-3">
 
@@ -64,10 +62,18 @@
               </div>
 
           </div>
+          <div class="modal-footer">
+        
+        <button type="button" class="btn btn-primary" @click="$emit('editMode')">Edit</button>
+      </div>
 
     </div>
       </div>
+
+      
        </div>
+
+      
 
 </template>
 
@@ -78,6 +84,7 @@ import { store } from '../store.js';
 
 export default {
   name: "recipe-view",
+  emits: ['editMode'],
   data() {
     return {
       message: '',

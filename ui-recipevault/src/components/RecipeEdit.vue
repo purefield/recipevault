@@ -1,40 +1,118 @@
 <template>
 
+<div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
 
-  <div class="edit-form">
-    <h4>{{store.recipe.title}}</h4>
+      <div class="modal-header">
+            
+            <img v-bind:src="store.image_url + store.recipe.image_name" class="card-img-top" /> 
+         
+        </div>
+
+    <div class="modal-body">
+
+    <div class="vstack gap-4">
+
+       <div class="edit-form">
+    
     <form>
-      <div class="form-group">
+      <div>
         <label for="title">Title</label>
-        <input type="text" class="form-control" id="title"
-          v-model=store.recipe.title
-        />
-
-        <label for="description">Title</label>
-        <input type="text" class="form-control" id="description"
-          v-model=store.recipe.description
-        />
+        <input type="text" class="form-control" id="title" v-model=store.recipe.title />
       </div>
-      
-
-     
     </form>
+    
+    </div>
+    
 
-    <button class="badge badge-danger mr-2"
-      @click="deleteRecipe"
-    >
-      Delete
-    </button>
+       <div>
+        <label for="description">Description</label>
+        <input type="text" class="form-control" id="description" v-model=store.recipe.description />
+      </div>
 
-    <button type="submit" class="badge badge-success"
-      @click="updateRecipe"
-    >
-      Update
-    </button>
-    <p>{{ message }}</p>
-  </div>
+      
+    </div>
 
-  
+      <hr>
+
+         <div class="vstack gap-3">
+
+         <div class="hstack gap-2">
+
+            <div>
+             <strong>Prep Time:</strong>
+               <input type="text" class="form-control" id="prep_time" v-model=store.recipe.prep_time />
+            </div>
+
+              <div>
+              <strong>  Cook Time: </strong>
+              <input type="text" class="form-control" id="cook_time" v-model=store.recipe.cook_time />
+              </div>
+
+              <div>
+              <strong>  Servings: </strong>
+              <input type="text" class="form-control" id="servings" v-model=store.recipe.servings />
+              </div>
+
+              <div>
+              <strong>  Servings Unit: </strong>
+              <input type="text" class="form-control" id="serving_unit" v-model=store.recipe.serving_unit />
+              </div>
+
+        </div>
+
+              
+
+              <div>
+              <strong> Cuisine: </strong>
+              <input type="text" class="form-control" id="cuisine" v-model=store.recipe.cuisine />
+              </div>
+
+              <div>
+              <strong>Course: </strong>
+              <input type="text" class="form-control" id="course" v-model=store.recipe.course />
+              </div>
+
+              <div>
+                <strong>Ingredients: </strong>
+                  
+
+                  <textarea
+          class="form-control"
+          id="ingredients"
+          required
+          v-model="store.recipe.ingredients"
+          name="ingredients"
+        />
+                 
+              </div>
+
+              <div>
+                <strong>Directions: </strong>
+                 <textarea
+          class="form-control"
+          id="directions"
+          required
+          v-model="store.recipe.directions"
+          name="directions"
+        />
+              </div>
+
+          </div>
+          <div class="modal-footer">
+        
+        <button type="button" class="btn btn-primary" @click="deleteRecipe()">Delete</button>
+        
+        <button type="button" class="btn btn-primary" @click="updateRecipe()">Save</button>
+        <button type="button" class="btn btn-primary" @click="$emit('viewMode')">View Recipe</button>
+      </div>
+
+    </div>
+      </div>
+
+      
+       </div>
+
 </template>
 
 <script>
@@ -65,7 +143,7 @@ export default {
     },
 
     deleteRecipe() {
-      RecipeDataService.delete(this.currentRecipe.id)
+      RecipeDataService.delete(store.recipe.id)
         .then(response => {
           console.log(response.data);
           this.$router.push({ name: "recipes" });
