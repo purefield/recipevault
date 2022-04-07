@@ -11,48 +11,59 @@
 
     <div class="modal-body">
 
-    <h5 class="modal-title">{{store.recipe.title}}</h5>
+    <div class="vstack gap-4">
 
-         <div>
-          {{store.recipe.description}}
+       <div><strong>{{store.recipe.title}}</strong></div>
+
+       <div>
+                {{store.recipe.description}}
+      </div>
+    </div>
+
+       
+
+<hr>
+
+         <div class="vstack gap-3">
+
+         <div class="hstack gap-3">
+
+            <div>
+               <strong> Prep Time: </strong>{{store.recipe.prep_time}}
+              </div>
+
+              <div>
+              <strong>  Cook Time: </strong>{{store.recipe.cook_time}}
+              </div>
+
+              <div>
+              <strong>  Servings: </strong>{{store.recipe.servings}} {{store.recipe.serving_unit}}
+              </div>
+
         </div>
 
-        <div>
-          <label><strong>Cuisine:</strong>{{store.recipe.cuisine}}</label> 
-        </div>
+              
 
-        <div>
-          <label><strong>Ingredients</strong>{{store.recipe.ingredients}}</label> 
-        </div>
+              <div>
+              <strong> Cuisine: </strong> {{store.recipe.cuisine}}
+              </div>
 
-        <div>
-          <label><strong>Cook Time:</strong>{{store.recipe.cook_time}}</label> 
-        </div>
+              <div>
+              <strong>Course: </strong>{{store.recipe.course}}
+              </div>
 
-        <div>
-          <label><strong>Author:</strong>{{store.recipe.author}}</label> 
-        </div>
+              <div>
+                <strong>Ingredients: </strong>
+                  <div v-for="(ingredient, index) in store.recipe.ingredients" :key="index">
+                  {{ingredient}}
+                  </div>
+              </div>
 
-        <div>
-          <label><strong>Course:</strong>{{store.recipe.course}}</label> 
-        </div>
+              <div>
+                <strong>Directions: </strong>{{store.recipe.directions}}
+              </div>
 
-        <div>
-          <label><strong>Directions:</strong>{{store.recipe.directions}}</label> 
-        </div>
-
-        <div>
-          <label><strong>Serving Units:</strong>{{store.recipe.prep_time}}</label> 
-        </div>
-
-        <div>
-          <label><strong>Servings:</strong>{{store.recipe.course}}</label> 
-        </div>
-
-        <div>
-          <label><strong>Source:</strong>{{store.recipe.source}}</label> 
-        </div>
-
+          </div>
 
     </div>
       </div>
