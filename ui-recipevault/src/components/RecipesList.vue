@@ -44,26 +44,11 @@
 
 <!-- Recipe Modal -->
 <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
+  
+        <RecipeView v-if="component === 'RecipeView'" />
+        <RecipeEdit v-if="component === 'RecipeEdit'" />
+    
 
-    <RecipeView v-if="component === 'RecipeView'" v-bind=currentRecipe />
-    <RecipeEdit v-if="component === 'RecipeEdit'" v-bind=currentRecipe />
-
-        
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      
-      <div class="modal-footer">
-       
-       <button type="button" class="btn btn-primary" tag="button" @click="setEditRecipe()">Edit</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        
-        
-      </div>
-    </div>
-  </div>
-    </div>
   </div>
 
   
@@ -80,6 +65,8 @@ import RecipeView from "./RecipeView.vue";
 
 import { Modal } from 'bootstrap';
 
+import { store } from '../store.js';
+
 export default {
   name: "recipe-list",
   modal: null,
@@ -93,7 +80,8 @@ export default {
       currentRecipe: null,
       currentIndex: -1,
       title: "",
-      image_url: ""
+      image_url: "",
+      store
     };
   },
   methods: {
@@ -117,13 +105,14 @@ export default {
     setActiveRecipe(recipe, index) {
       this.currentRecipe = recipe;
       this.currentIndex = recipe ? index : -1;
+      this.store.recipe = this.currentRecipe;
       this.modal.show();
     },
 
     setEditRecipe() {
       console.log("setEditRecipe")
       this.component = "RecipeEdit"
-      
+
     },
 
   

@@ -2,17 +2,17 @@
 
 
   <div class="edit-form">
-    <h4>{{$attrs.title}}</h4>
+    <h4>{{store.recipe.title}}</h4>
     <form>
       <div class="form-group">
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title"
-          v-model=this.updatedRecipe.title
+          v-model=store.recipe.title
         />
 
         <label for="description">Title</label>
         <input type="text" class="form-control" id="description"
-          v-model=this.updatedRecipe.description
+          v-model=store.recipe.description
         />
       </div>
       
@@ -40,24 +40,21 @@
 <script>
 import RecipeDataService from "../services/RecipeDataService";
 
+import { store } from '../store.js';
+
 export default {
   name: "recipe-edit",
   data() {
     return {
       message: '',
-      updatedRecipe: 'null',
-      title: "",
-      id:""
-
-      
-
+      store
     };
   },
   methods: {
     
     
    updateRecipe() {
-      RecipeDataService.update(this.updatedRecipe.id, this.updatedRecipe)
+      RecipeDataService.update(store.recipe.id, store.recipe)
         .then(response => {
           console.log(response.data);
           this.message = 'The recipe was updated successfully!';
@@ -80,12 +77,7 @@ export default {
   },
   mounted() {
     this.message = '';
-    this.updatedRecipe = {
-      title :this.$attrs.title,
-      description :this.$attrs.description,
-      id :this.$attrs.id,
-
-    }
+    
     
     
   }
