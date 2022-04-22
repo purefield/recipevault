@@ -1,27 +1,34 @@
 <template>
 
 <div class="modal-dialog modal-dialog-scrollable">
+    
     <div class="modal-content">
 
       <div class="modal-header">
-            
-            <img v-bind:src="store.image_url + store.recipe.image_name" class="card-img-top" /> 
-         
-        </div>
-
-    <div class="modal-body">
-
-    <div class="vstack gap-4">
-
-       <div class="edit-form">
-    
+      
     <form>
       <div>
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title" v-model=store.recipe.title />
       </div>
     </form>
-    
+             
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         
+      </div>
+
+    <div v class="modal-body">
+
+    <div class="vstack gap-3">
+
+    <img v-if=url :src="url" />
+    <img v-else v-bind:src="store.image_url + store.recipe.image_name" class="card-img-top" />
+
+    <div class="mb-3">
+  <label for="formFile" class="form-label">Recipe Image</label>
+  <input type="file" ref="file" class="form-control" @change="selectFile" />
+</div>
+
     </div>
     
 
@@ -30,8 +37,7 @@
         <input type="text" class="form-control" id="description" v-model=store.recipe.description />
       </div>
 
-      
-    </div>
+    
 
       <hr>
 
@@ -108,10 +114,9 @@
       </div>
 
     </div>
-      </div>
-
-      
-       </div>
+    </div>
+    </div>
+    
 
 </template>
 
@@ -125,7 +130,12 @@ export default {
   data() {
     return {
       message: '',
-      store
+      store,
+      url: null,
+      selectedFiles: undefined,
+      currentFile: undefined,
+      progress: 0,
+      fileInfos: [],
     };
   },
   methods: {
@@ -151,7 +161,15 @@ export default {
         .catch(e => {
           console.log(e);
         });
-    }
+    },
+
+selectFile() {
+      this.selectedFiles = this.$refs.file.files;
+      this.currentFile = this.selectedFiles.item(0)
+      this.url = URL.createObjectURL(this.currentFile);
+    },
+
+
   },
   mounted() {
     this.message = '';

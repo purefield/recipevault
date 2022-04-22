@@ -36,15 +36,15 @@ public class RecipeFormData {
 
     @FormParam("file")
     @PartType(MediaType.APPLICATION_OCTET_STREAM)
-    public InputStream data;
+    public InputStream file;
 
     @FormParam("filename")
     @PartType(MediaType.TEXT_PLAIN)
-    public String fileName;
+    public String filename;
 
     @FormParam("mimetype")
     @PartType(MediaType.TEXT_PLAIN)
-    public String mimeType;
+    public String mimetype;
 
     //@FormParam("ingredients")
     //public List<Ingredient> ingredients = new ArrayList<Ingredient>();

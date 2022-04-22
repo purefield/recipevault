@@ -33,6 +33,16 @@ abstract public class CommonResource {
     @ConfigProperty(name = "bucket.name")
     String bucketName;
 
+
+    protected PutObjectRequest buildPutRequest(String fileName ,String mimeType) {
+        return PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileName)
+                .contentType(mimeType)
+                .build();
+    }
+
+
     protected PutObjectRequest buildPutRequest(RecipeFormData formData) {
         return PutObjectRequest.builder()
                 .bucket(bucketName)

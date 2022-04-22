@@ -1,32 +1,16 @@
 <template>
 
+<div class="container-fluid">
   <div>
-
-        <div class="input-group mb-3" >
-        <input type="text" class="form-control" placeholder="Search by title"
-          v-model="title"/>
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button"
-            @click="searchTitle"
-          >
-            Search
-          </button>
-          <button class="btn btn-outline-secondary" type="button"
-            @click="refreshList"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-
 
 <div class="card-group">
 
 
-<div v-for="(recipe, index) in recipes" :key="index"  @click="setActiveRecipe(recipe, index)">
+<div v-for="(recipe, index) in this.store.recipes" :key="index"  @click="setActiveRecipe(recipe, index)">
   <div class="col">
     <div class="card">
-      <img v-bind:src="image_url + recipe.image_name" class="card-img-top" width="240" height="160"/> 
+      
+      <img v-if="displayImage(recipe.image_name)" v-bind:src="image_url + recipe.image_name" class="card-img-top" width="240" height="160"/> 
         <div class="card-body">
             <h5 class="card-title">{{recipe.title}}</h5> 
             
@@ -40,7 +24,7 @@
 
 </div>
 
-
+</div>
 
 <!-- Recipe Modal -->
 <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipe" aria-hidden="true">
@@ -84,11 +68,25 @@ export default {
       store
     };
   },
+
+
+/** computed: {
+    // a computed getter
+    displayImage(image_name) {
+      console.log(image_name)
+      // `this` points to the component instance
+      return image_name != "default.jpg" ? 'Yes' : 'No'
+    }
+  },
+  */
+
+
   methods: {
     retrieveRecipes() {
       RecipeDataService.getAll()
         .then(response => {
-          this.recipes = response.data;
+          this.store.recipes = response.data;
+          this.recipes = this.store.recipes
           console.log(response.data);
         })
         .catch(e => {
@@ -118,6 +116,16 @@ export default {
     setViewMode () {
     console.log("setViewMode")
     this.component = "RecipeView"
+    },
+
+    displayImage(image_name) {
+      console.log(image_name)
+      // `this` points to the component instance
+      if (image_name != "default.jpg")
+        return true
+      else
+      return false
+      
     },
 
   

@@ -53,7 +53,21 @@
           required
           v-model="recipe.ingredient_list"
           name="ingredients"
-          rows="10"
+          rows="7"
+        />
+      </div>
+</div>
+
+<div class="mb-3">
+      <div class="form-group">
+        <label for="directions">Directions</label>
+        <textarea
+          class="form-control"
+          id="directions"
+          required
+          v-model="recipe.directions"
+          name="directions"
+          rows="7"
         />
       </div>
 </div>
@@ -103,7 +117,6 @@ export default {
   data() {
     return {
       recipe: {
-        id: null,
         title: "",
         description: "",
         cuisine: "",
@@ -116,8 +129,8 @@ export default {
         cook_time: "",
         servings: "",
         serving_unit: "",
-        ingredient_list: ""
-        
+        ingredient_list: "",
+  
       },
       selectedFiles: undefined,
         currentFile: undefined,
@@ -132,16 +145,8 @@ export default {
   methods: {
     saveRecipe() {
 
-    //ingredients[] =ingredient_list.split("\n")
 
-      var data = {
-        title: this.recipe.title,
-        description: this.recipe.description,
-        file: this.currentFile,
-        ingredients : this.recipe.ingredient_list.split("\n") 
-      };
-
-      RecipeDataService.create(data)
+      RecipeDataService.create(this.currentFile,this.recipe )
         .then(response => {
           this.recipe.id = response.data.id;
           console.log(response.data);
@@ -156,11 +161,9 @@ export default {
       this.selectedFiles = this.$refs.file.files;
       this.currentFile = this.selectedFiles.item(0)
       this.url = URL.createObjectURL(this.currentFile);
+        
     },
 
-    joinIngredients() {
-
-    },
     
     newRecipe() {
       this.submitted = false;

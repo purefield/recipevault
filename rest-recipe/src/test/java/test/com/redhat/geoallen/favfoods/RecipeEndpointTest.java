@@ -1,6 +1,8 @@
 package test.com.redhat.geoallen.favfoods;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,47 @@ public class RecipeEndpointTest {
 		.extract()
 		.response();
 	}
+
+
+	@Test
+	public void createRecipeNoImage() {
+
+		String userDirectory = Paths.get("")
+			.toAbsolutePath()
+			.toString();
+
+		System.out.println("Directory: " + userDirectory);
+		Recipe recipe = getTestRecipe();
+		
+		
+
+		Response response =
+		
+	given()
+	.baseUri("http://localhost:8080/recipes")
+	.contentType(ContentType.MULTIPART)
+        //.multiPart("file", new File("./src/test/resources/payloads/images/blueberry_kuechen.jpg"))
+		//.multiPart("filename", "blueberry_kuechen.jpg")
+		//.multiPart("mimetype","image/jpeg")
+        .multiPart("recipe", recipe, "application/json")
+        
+		// WHEN
+	.when()
+		.post()
+		.then()
+		.assertThat()
+		.statusCode(201)
+		.log()
+		.all(true)
+		.extract()
+		.response();
+	}
+
+
+
+
+
+
 
 	@Test
 	public void findRecipeByTitle() {
@@ -179,7 +222,7 @@ public class RecipeEndpointTest {
 	public Recipe getTestRecipe()  {
 
 		
-
+		
 		List<String> ingredients = new ArrayList();
 		ingredients.add("ing0");
 		ingredients.add("ing1");
@@ -195,7 +238,8 @@ public class RecipeEndpointTest {
 		recipe.cuisine = "Mexican";
 		recipe.directions = "Mix, Stir, Bake";
 
-		recipe.image_name = "test-filename.jpg";
+		recipe.image_name = "test.jpg";
+		
 		
 		recipe.prep_time =30;
 		recipe.servings = 8;

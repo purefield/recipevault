@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 
 
@@ -28,6 +29,12 @@ public class RecipeDTO {
     
     public String image_name; 
 
+    public String filename; 
+
+    public  InputStream  file; 
+
+    public String mimetype; 
+
     
     public String cuisine;
 
@@ -40,6 +47,8 @@ public class RecipeDTO {
     
    
     public List<String> ingredients;
+
+    public String ingredient_list;
     
     
     public String description;

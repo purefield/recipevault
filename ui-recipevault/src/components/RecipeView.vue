@@ -4,8 +4,11 @@
     <div class="modal-content">
 
       <div class="modal-header">
+      <div><strong>{{store.recipe.title}}</strong></div>
+      
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
             
-            <img v-bind:src="store.image_url + store.recipe.image_name" class="card-img-top" /> 
          
         </div>
 
@@ -13,7 +16,7 @@
 
     <div class="vstack gap-4">
 
-       <div><strong>{{store.recipe.title}}</strong></div>
+    <img v-bind:src="store.image_url + store.recipe.image_name" class="card-img-top" /> 
 
        <div>
                 {{store.recipe.description}}

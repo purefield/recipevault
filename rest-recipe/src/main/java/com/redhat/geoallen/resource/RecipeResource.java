@@ -45,6 +45,7 @@ import io.quarkus.panache.common.Sort;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -95,59 +96,98 @@ public class RecipeResource extends CommonResource {
         return Response.ok(Recipe).status(201).build();
     } 
 
+
+    /**
+     * This method accepts the FormData with image and creats an S3 Object for the image and inserts 
+     * an Entity in the DB
+     * 
+     * @param formData
+     * @return
+     * @throws Exception
+     */
     @POST
     @Transactional
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response uploadFile(@MultipartForm RecipeFormData formData) throws Exception {
 
-        Recipe newDTORecipe = null;
 
-        
-            
+        try { 
 
-        //log.info(formData.title);
-        log.info(formData.fileName);
-        log.info(formData.mimeType);
-        log.info(formData.recipe);
+        log.info(formData);
 
-        
-                //return Response.ok().status(Status.OK).build();
-                if (formData.fileName == null || formData.fileName.isEmpty()) {
-                    return Response.status(Status.BAD_REQUEST).build();
-                }
+        Recipe newRecipe = null;
+        UUID imageFileUuid = null;
+        PutObjectResponse putResponse = null;
 
-                
-                if (formData.mimeType == null || formData.mimeType.isEmpty()) {
-                    return Response.status(Status.BAD_REQUEST).build();
-                }
-                
-            
-                PutObjectResponse putResponse = s3.putObject(buildPutRequest(formData),
-                RequestBody.fromFile(uploadToTemp(formData.data)));
+        String recipeJSON = formData.recipe;
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        //create the DTO to use in the conditional statements
+        RecipeDTO recipeDTO = objectMapper.readValue(recipeJSON, RecipeDTO.class);
+        recipeDTO.file = formData.file;
+        recipeDTO.filename = formData.filename;
+        recipeDTO.mimetype = formData.mimetype;
+        log.info("From DTO: " + recipeDTO.title);
+
+         // need some type of data validation as can't count on the UI
+         // If there isn't an image, we can skip S3
+         // otherwise, we need to create a unique object/image name per Recipe
        
-                if (putResponse != null) {
 
-                    String recipeJSON = formData.recipe;
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    RecipeDTO recipeDTO = objectMapper.readValue(recipeJSON, RecipeDTO.class);
+                if (recipeDTO.filename != null && recipeDTO.filename.length() > 0 ) {
+                    // generate unique file name 
+                        imageFileUuid = UUID.randomUUID();
+                        String[] mimetypeArray = recipeDTO.mimetype.split("/");
+                        String subtype = mimetypeArray[1];
+                        String imageName = imageFileUuid + "." + subtype;
+                        
+                        //String newFileName = recipeTitle.replaceAll("\\s+", ""); 
+                        log.info("new uuid FileName: " + imageFileUuid);
 
-                    log.info("From DTO: " + recipeDTO.title);
+                        recipeDTO.image_name = imageName;
+                        
+                        putResponse = s3.putObject(buildPutRequest(recipeDTO.image_name,recipeDTO.mimetype),
+                        RequestBody.fromFile(uploadToTemp(recipeDTO.file)));
 
-                    newDTORecipe = new Recipe(recipeDTO, formData.fileName);
+                        // Check the S3 Put Response
+                        if (putResponse != null) {
 
-                    newDTORecipe.persist();
+                            log.info(putResponse.eTag());
 
+                            newRecipe = new Recipe(recipeDTO);
 
-                    return Response.ok(newDTORecipe).status(Status.CREATED).build();
-        
-                 }
-              
-    
+                            newRecipe.persist();
+
+                         }
+
+                         else {
+                            newRecipe = new Recipe(recipeDTO);
+
+                            newRecipe.image_name = "default.jpg";
+                            newRecipe.persist();
+                         }
+
+                         return Response.ok(newRecipe).status(Status.CREATED).build();
+
+                   } // end if fileName != null
+
              else {
                     log.info(toString());
-                     return Response.serverError().build();
+                    newRecipe = new Recipe(recipeDTO);
+                    newRecipe.image_name = "default.jpg";
+                    newRecipe.persist();
+
+                     return Response.ok(newRecipe).status(Status.CREATED).build();
              }
+
+            }
+
+            catch (Exception e) {
+                log.error(e.getMessage());
+                return Response.serverError().build();
+
+            }
 
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 
 
@@ -27,6 +28,9 @@ public class Recipe {
     //photo 
     
     public String image_name; 
+
+
+    public String mimetype; 
 
     
     public String cuisine;
