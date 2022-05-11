@@ -46,8 +46,8 @@ abstract public class CommonResource {
     protected PutObjectRequest buildPutRequest(RecipeFormData formData) {
         return PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key(formData.fileName)
-                .contentType(formData.mimeType)
+                .key(formData.filename)
+                .contentType(formData.mimetype)
                 .build();
     }
 

@@ -107,9 +107,10 @@
           </div>
           <div class="modal-footer">
         
-        <button type="button" class="btn btn-primary" @click="deleteRecipe()">Delete</button>
+        <button type="button" class="btn btn-primary" @click="$emit('deleteRecipe')">Delete</button>
         
-        <button type="button" class="btn btn-primary" @click="updateRecipe()">Save</button>
+        <button type="button" class="btn btn-primary" @click="$emit('updateRecipe')">Save</button>
+        
         <button type="button" class="btn btn-primary" @click="$emit('viewMode')">View Recipe</button>
       </div>
 
@@ -121,12 +122,13 @@
 </template>
 
 <script>
-import RecipeDataService from "../services/RecipeDataService";
 
 import { store } from '../store.js';
 
 export default {
   name: "recipe-edit",
+  modal: null,
+
   data() {
     return {
       message: '',
@@ -141,18 +143,20 @@ export default {
   methods: {
     
     
-   updateRecipe() {
-      RecipeDataService.update(store.recipe.id, store.recipe)
+  /** updateRecipe() {
+      RecipeDataService.update(this.currentFile,store.recipe)
         .then(response => {
           console.log(response.data);
           this.message = 'The recipe was updated successfully!';
+          this.modal.hide();
         })
         .catch(e => {
           console.log(e);
         });
     },
+    */
 
-    deleteRecipe() {
+    /** deleteRecipe() {
       RecipeDataService.delete(store.recipe.id)
         .then(response => {
           console.log(response.data);
@@ -162,17 +166,21 @@ export default {
           console.log(e);
         });
     },
+    */
 
 selectFile() {
       this.selectedFiles = this.$refs.file.files;
       this.currentFile = this.selectedFiles.item(0)
       this.url = URL.createObjectURL(this.currentFile);
+      store.currentFile = this.currentFile
     },
 
 
   },
   mounted() {
     this.message = '';
+   
+    
     
     
     

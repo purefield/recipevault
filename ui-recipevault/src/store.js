@@ -23,5 +23,6 @@ export const store = reactive({
       updateDateTime: "",
       userid: ""
   },
+  currentFile: undefined,
   image_url: window.VUE_APP_IMAGE_SERVER_URL
 })

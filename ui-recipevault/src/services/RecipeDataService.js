@@ -14,12 +14,7 @@ class RecipeDataService {
  /** Create Recipe  */
   create(file, recipe) {
 
-    /** const recipe = JSON.stringify({
-      title: data.title,
-      description: data.description,
-      ingredients: data.ingredients
-    })*/
-
+    
     recipe.ingredients = recipe.ingredient_list.split("\n") 
 
     const new_recipe = JSON.stringify(recipe)
@@ -42,20 +37,28 @@ class RecipeDataService {
     }
 
 
-  update(id, data) {
+ /** Update Recipe  */
+  update(file, recipe) {
 
-    const recipe = JSON.stringify({
-      title: data.title,
-      description: data.description
-    })
+    //recipe.ingredients = recipe.ingredients.split("\n") 
+
+  const updated_recipe = JSON.stringify(recipe)
 
 
   let formData = new FormData();
+  let id = recipe.id
 
-  //formData.append('filename',data.file.name);
-  //formData.append('mimetype',data.file.type)
-  //formData.append('file',data.file)
-  formData.append('recipe',recipe)
+  console.log("JSON recipe:" + updated_recipe)
+ 
+
+  if (file !== undefined) {
+    console.log("File:" + file.name)
+    formData.append('filename',file.name);
+    formData.append('mimetype',file.type)
+    formData.append('file',file)
+ }
+
+   formData.append('recipe',updated_recipe)
 
     return http.put(`/recipes/${id}`, formData, {
       headers: {

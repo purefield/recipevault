@@ -30,7 +30,7 @@
 <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipe" aria-hidden="true">
   
         <RecipeView v-if="component === 'RecipeView'" @editMode="setEditRecipe" />
-        <RecipeEdit v-if="component === 'RecipeEdit'" @viewMode="setViewMode"/>
+        <RecipeEdit v-if="component === 'RecipeEdit'" @viewMode="setViewMode" @updateRecipe="updateRecipe" @deleteRecipe="deleteRecipe"/>
     
 
   </div>
@@ -94,6 +94,33 @@ export default {
         });
     },
 
+    updateRecipe() {
+      RecipeDataService.update(store.currentFile,store.recipe)
+        .then(response => {
+          console.log(response.data);
+          this.message = 'The recipe was updated successfully!';
+          this.modal.hide();
+          this.component = "RecipeView"
+          this.retrieveRecipes();
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
+     deleteRecipe() {
+      RecipeDataService.delete(store.recipe.id)
+        .then(response => {
+          console.log(response.data);
+          this.modal.hide();
+          this.retrieveRecipes();
+          
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
     refreshList() {
       this.retrieveRecipes();
       this.currentRecipe = null;
@@ -104,6 +131,8 @@ export default {
       this.currentRecipe = recipe;
       this.currentIndex = recipe ? index : -1;
       this.store.recipe = this.currentRecipe;
+      this.currentFile = undefined
+      this.store.currentFile = undefined;
       this.modal.show();
     },
 

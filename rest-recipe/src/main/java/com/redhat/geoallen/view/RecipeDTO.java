@@ -8,15 +8,18 @@ import org.jboss.logging.Logger;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RecipeDTO {
+
+    
 
     private static final Logger LOG = Logger.getLogger(RecipeDTO.class);
       
 
-    
+   
+
     public String title;
 
     public String userid;

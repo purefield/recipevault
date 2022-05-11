@@ -73,10 +73,10 @@ public class Recipe extends PanacheEntity {
     )
     public List<String> ingredients;
     
-    @Column(length = 50)
+    @Column(length = 250)
     public String description;
 
-    @Column(length = 250)
+    @Column(length = 500)
     public String directions;
 
     @Column(length = 200)

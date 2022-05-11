@@ -17,6 +17,8 @@
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <quarkus-amazon-services.version>1.0.3</quarkus-amazon-services.version>
     <awssdk.testcontainers.version>1.12.57</awssdk.testcontainers.version>
+    <org.mapstruct.version>1.5.0.RC1</org.mapstruct.version>
+  
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -94,6 +96,17 @@
       <version>${awssdk.testcontainers.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
+  </dependency>
+  <dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct-processor</artifactId>
+    <version>${org.mapstruct.version}</version>
+    <scope>provided</scope>
+  </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -104,6 +117,7 @@
           <source>11</source>
           <target>11</target>
           <parameters>true</parameters>
+
         </configuration>
       </plugin>
       <plugin>

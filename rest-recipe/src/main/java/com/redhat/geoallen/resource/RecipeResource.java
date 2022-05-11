@@ -37,9 +37,11 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import com.redhat.geoallen.view.RecipeDTO;
 import com.redhat.geoallen.view.RecipeFormData;
+import com.redhat.geoallen.view.RecipeMapper;
 import com.redhat.geoallen.orm.panache.Recipe;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 
 import io.quarkus.panache.common.Sort;
 
@@ -60,6 +62,14 @@ public class RecipeResource extends CommonResource {
 
     @Inject
    Logger log; 
+
+   @Inject
+   RecipeMapper recipeMapper;
+
+  
+
+   
+  
 
 
 
@@ -122,6 +132,7 @@ public class RecipeResource extends CommonResource {
 
         String recipeJSON = formData.recipe;
         ObjectMapper objectMapper = new ObjectMapper();
+        
 
         //create the DTO to use in the conditional statements
         RecipeDTO recipeDTO = objectMapper.readValue(recipeJSON, RecipeDTO.class);
@@ -155,7 +166,8 @@ public class RecipeResource extends CommonResource {
 
                             log.info(putResponse.eTag());
 
-                            newRecipe = new Recipe(recipeDTO);
+                            //newRecipe = new Recipe(recipeDTO);
+                            newRecipe = recipeMapper.RecipeDTOToRecipeEntity(recipeDTO);
 
                             newRecipe.persist();
 
@@ -198,53 +210,71 @@ public class RecipeResource extends CommonResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response updateRecipe(@PathParam Long id, @MultipartForm RecipeFormData updatedRecipe) throws Exception {
 
-        log.info("id: " +  id);
-        
+        try { 
 
-        //need to find by ID 
+        log.info("id: " +  id);
+
+        PutObjectResponse putResponse = null;
+        String recipeJSON = updatedRecipe.recipe;
+        ObjectMapper objectMapper = new ObjectMapper();
+        
+        RecipeDTO recipeDTO = objectMapper.readValue(recipeJSON, RecipeDTO.class);
+        recipeDTO.file = updatedRecipe.file;
+        recipeDTO.filename = updatedRecipe.filename;
+        recipeDTO.mimetype = updatedRecipe.mimetype;
+
+
         Recipe existingRecipe= Recipe.findById(id);
 
         if (existingRecipe == null) {
             throw new WebApplicationException("Recipe with id of " + id + " does not exist.", 404);
         }
 
-        String recipeJSON = updatedRecipe.recipe;
-        ObjectMapper objectMapper = new ObjectMapper();
-        RecipeDTO recipeDTO = objectMapper.readValue(recipeJSON, RecipeDTO.class);
+        // if there is new file uploaded, then replace old one.
+        if (recipeDTO.filename != null && recipeDTO.filename.length() > 0 ) {
 
-        log.info("From DTO: " + recipeDTO.title);
+          putResponse = handleImage(recipeDTO);
 
-        //log.info(updatedRecipe.title);
-        //log.info(updatedRecipe.fileName);
 
-        
-        existingRecipe.title = recipeDTO.title;
-        existingRecipe.description= recipeDTO.description;
+          if (putResponse != null) {
 
-        /** 
-         if (updatedRecipe.fileName == null || updatedRecipe.fileName.isEmpty()) {
-            return Response.status(Status.BAD_REQUEST).build();
+            log.info(putResponse.eTag());
+
+           
+                log.info("From DTO: " + recipeDTO.title);
+
+                recipeMapper.merge(existingRecipe,recipeDTO);
+
+                log.info(existingRecipe);
+
+          }
         }
- 
-        if (updatedRecipe.mimeType == null || updatedRecipe.mimeType.isEmpty()) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
-        
-        PutObjectResponse putResponse = s3.putObject(buildPutRequest(updatedRecipe),
-                RequestBody.fromFile(uploadToTemp(updatedRecipe.data)));
-        if (putResponse != null) {
-            // if the S3 completed successfully, use the url in the recipe info
-            //Should we add S3 URL location to the record or just calcuate URL?
-            //http://recipe-images.localhost:4566/recipe-images/Fuse_79_Components.png
-            
-            
-            existingRecipe.persist();
-            */
 
-            return Response.ok().status(Status.CREATED).build();
-        /** } else {
+          else {
+            log.info(toString());
+            recipeMapper.merge(existingRecipe,recipeDTO);
+
+            if (existingRecipe.image_name == null || existingRecipe.image_name.length()== 0) {
+
+            existingRecipe.image_name = "default.jpg";
+            }
+            
+             
+                }
+        
+
+        return Response.ok(existingRecipe).status(Status.CREATED).build();
+
+    }
+
+        catch (Exception e) {
+            log.error(e);
             return Response.serverError().build();
-        } */
+
+        }
+
+       
+
     }
 
 
@@ -291,6 +321,33 @@ public class RecipeResource extends CommonResource {
     }  
  
 
+    private PutObjectResponse handleImage(RecipeDTO recipe) {
+
+        PutObjectResponse putResponse = null;
+        UUID imageFileUuid = null;
+
+        if (recipe.filename != null && recipe.filename.length() > 0 ) {
+            // generate unique file name 
+                imageFileUuid = UUID.randomUUID();
+                String[] mimetypeArray = recipe.mimetype.split("/");
+                String subtype = mimetypeArray[1];
+                String imageName = imageFileUuid + "." + subtype;
+                
+                //String newFileName = recipeTitle.replaceAll("\\s+", ""); 
+                log.info("new uuid FileName: " + imageFileUuid);
+
+                recipe.image_name = imageName;
+                
+                putResponse = s3.putObject(buildPutRequest(recipe.image_name,recipe.mimetype),
+                RequestBody.fromFile(uploadToTemp(recipe.file)));
+        }
+
+
+        return putResponse;
+    }
+
+
+
 
     @Provider
     public static class ErrorMapper implements ExceptionMapper<Exception> {
@@ -327,6 +384,7 @@ public class RecipeResource extends CommonResource {
             map.put(key, value);
         } 
 
+    }
 
-}
+
 }

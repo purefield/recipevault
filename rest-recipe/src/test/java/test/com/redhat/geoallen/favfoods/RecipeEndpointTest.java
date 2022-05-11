@@ -155,6 +155,7 @@ public class RecipeEndpointTest {
 		.response();
 		Integer id = response.path("id");
 		recipe.title = "Recipe Title-Update";
+		recipe.ingredients.add("new ingreddient");
 		given()
 				.multiPart("recipe", recipe, "application/json")
 				.when().put("http://localhost:8080/recipes/{id}", id)
