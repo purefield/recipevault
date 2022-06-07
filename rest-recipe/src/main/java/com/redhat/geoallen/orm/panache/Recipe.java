@@ -15,11 +15,13 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Query;
 
 import java.time.LocalDateTime;
 
@@ -173,10 +175,26 @@ public class Recipe extends PanacheEntity {
     }
 
     public static List<Recipe> searchTitle(String searchString){
+
+        
+
+        //EntityManager em = getEntityManager();
         
         LOG.info("searchString: " + searchString);
 
-        return find("title", searchString).list();
+        String searchInput = "%" + searchString + "%";
+
+        //Query q = em.createNativeQuery("SELECT * FROM Recipe r WHERE :ingredients = ANY(r.ingredients)", Recipe.class);
+        //q.setParameter("topics", searchString);
+        
+        return list("lower(title) like ?1", searchInput );
+
+        //List<Recipe> recipeList = q.getResultList();
+        //return recipeList;
+
+        //return list("lower(title) like ?1", searchInput );
+
+        //return find("title", searchString).list();
 
     }
 

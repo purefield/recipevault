@@ -4,7 +4,7 @@
      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     
           <div class="container-fluid">
-              <router-link to="/" class="navbar-brand">Recipe Vault (Quarkified)</router-link>
+              <a href="#" class="navbar-brand" @click="retrieveRecipes">Recipe Vault (Quarkified)</a>
           
           <div class="collapse navbar-collapse">
         
@@ -20,6 +20,10 @@
                  <button class="btn btn-outline-secondary" type="button"
                    @click="searchTitle">
                      Search
+                    </button>
+                    <button class="btn btn-outline-secondary" type="button"
+                   @click="retrieveRecipes">
+                     Clear
                     </button>
                     </div>
               </form>
@@ -64,7 +68,20 @@ searchTitle() {
         .catch(e => {
           console.log(e);
         });
+    },
+retrieveRecipes() {
+      RecipeDataService.getAll()
+        .then(response => {
+          this.store.recipes = response.data;
+          //this.recipes = this.store.recipes
+          console.log(response.data);
+          this.$router.push("/");
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
+
   }
 
    }
