@@ -2,7 +2,7 @@
 
  - RESTEasy to expose the REST endpoints
  - Hibernate ORM with Panache to perform the CRUD operations on the database
- - A PostgreSQL database; see below to run one via Docker
+ - A PostgreSQL database
  - Image storage with S3 compatible storage
 
 ## Requirements
@@ -15,6 +15,7 @@ To compile and run this demo you will need:
 # Development Guide
 
 ## With Local S3 Storage ([S3 Deeper Dive](./S3-README.md))
+
 # S3 local instance
 # start local S3 emulator
 `podman run --rm --name local-s3 -p 4566:4566 -p 4572:4572 -e SERVICES=s3 -e START_WEB=0 -d localstack/localstack`
@@ -26,6 +27,30 @@ make_bucket: geoallen.recipevault.dev.images
 # Confirm 'recipe-images' Bucket is listed
 `aws s3 ls --endpoint-url=http://localhost:4566`
 2022-01-14 10:01:21 geoallen.recipevault.dev.images
+
+
+I was unable to work through issues with aws s3 cli and Self-Signed Certs.  I was able to use s3cmd successfully. - https://github.com/s3tools/s3cmd
+
+# s3 Configuration on ODF with s3cmd
+s3cmd --configure
+
+S3 Endpoint (Don't include protocol prefix): s3-openshift-storage.apps.ocp.webwim.com
+
+DNS-style bucket+hostname:port template for accessing a bucket: s3-openshift-storage.apps.ocp.webwim.com/%(bucket)
+
+For self-signed certs ensure Use HTTPS protocol: False
+
+# Modify Bucket Policy to Anonymous Read - Then the recipe images can be served from S3.
+
+Update public_s3.json with your bucket name
+
+s3cmd setpolicy public_s3.json s3://geoallen.recipevault.dev.i-ad7cc188-3bc4-4f91-b413-3b802e7511e6
+
+# Put a test object/image
+s3cmd put ./rest-recipe/src/test/resources/payloads/images/blueberry_kuechen.jpg s3://demo-bucket-6dcbeaba-6922-4244-bdb5-8c0e6d8a220b/bluebery.jpg
+
+# Validate the URL
+https://s3-openshift-storage.apps.ocp.webwim.com/geoallen.recipevault.dev.i-ad7cc188-3bc4-4f91-b413-3b802e7511e6/1f92d7ca-94ae-45bc-bce2-4fadf7885d5e.jpeg
 
 
 ## PostgreSQL
@@ -56,10 +81,6 @@ In this mode you can make changes to the code and have the changes immediately a
 # Load Sample Recipes
 
 
-
-
-
-
 # Run dev mode
 - Run `./mvnw clean package` and then `java -jar ./target/quarkus-app/quarkus-run.jar`
 - In dev mode `./mvnw clean quarkus:dev`
@@ -74,7 +95,7 @@ and run with:
 `./target/` 
 
 
-### Build and Deploy to OpenShift
+### Build and Push Images
 
 ## REST Service
 
@@ -84,20 +105,23 @@ geoallen1-mac:recipevault-backend geoallen$ ./mvnw clean package -DskipTests -Dq
 Build the Jar
 mvn clean package -DskipTests -Dquarkus.package.type=uber-jar
 
+./mvnw -DskipTests=true package
+
 Build a docker image:
-`docker build -f src/main/docker/Dockerfile.jvm -t quay.io/geoallen/rest-recipe .`
 
-mvn clean package -DskipTests -Dquarkus.package.type=uber-jar
+podman build -f src/main/docker/Dockerfile.jvm -t rest-recipe:1.0 .
 
+podman tag rest-recipe:1.0 quay.io/geoallen/rest-recipe:1.0
+
+podman login quay.io
+
+podman push quay.io/geoallen/rest-recipe:1.0
 
 ## Postgres
 
 oc new-app postgresql-persistent \
 -p POSTGRESQL_USER=recipevault -p POSTGRESQL_PASSWORD=recipevault -p POSTGRESQL_DATABASE=recipevaultdb
 
-Next we need to make sure you have a PostgreSQL instance running (Quarkus automatically starts one for dev and test mode). To set up a PostgreSQL database with Docker:
 
 
-## Recipe Vault 
 
-curl -X "DELETE" http://localhost:8080/recipes/2

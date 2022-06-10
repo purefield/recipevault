@@ -38,11 +38,11 @@ This outputs to /dist
 
 ## Build Container Image
 
-podman build  -t recipevault-frontend -f Containerfile .
+podman build  -t ui-recipevault -f Containerfile .
 
-podman build  -t quay.io/geoallen/recipevault-frontend:stage -f Containerfile .
+podman build  -t quay.io/geoallen/ui-recipevault:1.0 -f Containerfile .
 
-podman push quay.io/geoallen/recipevault-frontend:stage
+podman push quay.io/geoallen/ui-recipevault:1.0
 
 ## Deploy Image to OCP
 
