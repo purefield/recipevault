@@ -2,7 +2,7 @@
 
  - RESTEasy to expose the REST endpoints
  - Hibernate ORM with Panache to perform the CRUD operations on the database
- - A PostgreSQL database
+ - A PostgreSQL database - (Uses Dev Services for local testing)
  - Image storage with S3 compatible storage
 
 ## Requirements
@@ -10,11 +10,11 @@
 To compile and run this demo you will need:
 
 - JDK 11+
-- GraalVM
+- GraalVM (if you want to compile to native)
 
 # Development Guide
 
-## With Local S3 Storage ([S3 Deeper Dive](./S3-README.md))
+## With Local S3 Storage 
 
 # S3 local instance
 # start local S3 emulator
@@ -28,8 +28,7 @@ make_bucket: geoallen.recipevault.dev.images
 `aws s3 ls --endpoint-url=http://localhost:4566`
 2022-01-14 10:01:21 geoallen.recipevault.dev.images
 
-
-I was unable to work through issues with aws s3 cli and Self-Signed Certs.  I was able to use s3cmd successfully. - https://github.com/s3tools/s3cmd
+I was unable to resolve issues with aws s3 cli and Self-Signed Certs.  I was able to use s3cmd successfully. - https://github.com/s3tools/s3cmd
 
 # s3 Configuration on ODF with s3cmd
 s3cmd --configure
@@ -77,37 +76,13 @@ In this mode you can make changes to the code and have the changes immediately a
 
 # Run Tests
 
-
-# Load Sample Recipes
-
-
-# Run dev mode
-- Run `./mvnw clean package` and then `java -jar ./target/quarkus-app/quarkus-run.jar`
-- In dev mode `./mvnw clean quarkus:dev`
-
-# Running in native
-You can compile the application into a native executable using:
-
-`./mvnw clean package -Pnative`
-
-and run with:
-
-`./target/` 
-
-
-### Build and Push Images
-
-## REST Service
-
-Using project "recipevault-dev" on server "https://api.cluster-p889x.p889x.sandbox741.opentlc.com:6443".
-geoallen1-mac:recipevault-backend geoallen$ ./mvnw clean package -DskipTests -Dquarkus.kubernetes.deploy=true
-
+## Build Jar
 Build the Jar
 mvn clean package -DskipTests -Dquarkus.package.type=uber-jar
 
 ./mvnw -DskipTests=true package
 
-Build a docker image:
+# Build a container image:
 
 podman build -f src/main/docker/Dockerfile.jvm -t rest-recipe:1.0 .
 
@@ -122,6 +97,25 @@ podman push quay.io/geoallen/rest-recipe:1.0
 oc new-app postgresql-persistent \
 -p POSTGRESQL_USER=recipevault -p POSTGRESQL_PASSWORD=recipevault -p POSTGRESQL_DATABASE=recipevaultdb
 
+# Using S3 AWS account
+
+Before you can use the AWS SDKs with S3, you must get an AWS access key ID and secret access key. 
+For more information, see:
+ - [Sign up for AWS and Create an IAM User](https://docs.aws.amazon.com/sdk-for-java/v2/developer-guide/signup-create-iam-user.html)
+ - [Set Up AWS Credentials and Region for Development](https://docs.aws.amazon.com/sdk-for-java/v2/developer-guide/setup-credentials.html)
+
+Create a S3 bucket using AWS CLI using your default AWS profile
+`aws s3 mb s3://quarkus.s3.quickstart.11.22.33`
+
+**NOTE: Please assure the bucket name you created is unique across AWS S3. 
+See [Amazon S3 Bucket Naming Requirements](https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html#bucketnamingrules)**
 
 
+# Running in native
+You can compile the application into a native executable using:
 
+`./mvnw clean package -Pnative`
+
+and run with:
+
+`./target/` 

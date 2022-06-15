@@ -6,11 +6,11 @@
 ```
 yarn install
 ```
-
 ### Compiles and hot-reloads for development
 
-Environment variables for the UI are defined in ([env-config.js](./public/env-config.js)).  While typically vue.js environment variables are defined in .env files.  This configuration allows the ability to define the ENV varibles at runtime in a container.
+Environment variables for the UI are defined in ([env-config.js](./public/env-config.js)).  
 
+While typically vue.js environment variables are defined in .env files.  This configuration allows the ability to define ENV varibles at runtime so they can be modified during deployment.
 
 ```
 yarn serve
@@ -68,9 +68,6 @@ oc expose service/recipevault-frontend
 
 oc get route
 
-
-
-
 ## Ignorable Errors ##
 
 Uncaught TypeError: Cannot read properties of undefined (reading 'globalProperties')
@@ -78,14 +75,4 @@ Uncaught TypeError: Cannot read properties of undefined (reading 'globalProperti
 
 
 
-
-
-
-
-podman build  -t recipevault-frontend -f Containerfile .
-
-podman build  -t quay.io/geoallen/recipevault-frontend -f Containerfile .
-
-
-podman push quay.io/geoallen/recipevault-frontend
 
