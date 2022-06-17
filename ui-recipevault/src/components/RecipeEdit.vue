@@ -142,31 +142,6 @@ export default {
   },
   methods: {
     
-    
-  /** updateRecipe() {
-      RecipeDataService.update(this.currentFile,store.recipe)
-        .then(response => {
-          console.log(response.data);
-          this.message = 'The recipe was updated successfully!';
-          this.modal.hide();
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
-    */
-
-    /** deleteRecipe() {
-      RecipeDataService.delete(store.recipe.id)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push({ name: "recipes" });
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
-    */
 
 selectFile() {
       this.selectedFiles = this.$refs.file.files;

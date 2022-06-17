@@ -10,7 +10,8 @@
         
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                  <router-link to="/add" class="nav-link">Add Recipe</router-link>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRecipe">New Recipe</button>
+                 
                 </li>
               </ul>
 
@@ -32,10 +33,18 @@
       </nav>
   </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="createRecipe" tabindex="-1" aria-labelledby="createRecipeModal" aria-hidden="true">
+  <RecipeCreate  @createRecipe="createRecipe"/>
+  
+</div>
+
     <div class="container mt-3">
       <router-view />
     </div>
 
+    
 </div>
 </template>
 
@@ -43,16 +52,26 @@
 
 import RecipeDataService from "./services/RecipeDataService";
 
+import RecipeCreate from "./components/RecipeCreate.vue";
+
+
+
+
 import { store } from './store.js';
 
 export default {
   name: "app",
+  modal: null,
+  components: { RecipeCreate},
+  emits: ['editMode'],
 
   data() {
     
     return {
+      component: "",
       recipes: [],
       title: "",
+      modal: null,
       store
     }
   },
@@ -69,7 +88,13 @@ searchTitle() {
           console.log(e);
         });
     },
+
+
 retrieveRecipes() {
+      // reset form
+      this.title=""
+
+      //get recipes
       RecipeDataService.getAll()
         .then(response => {
           this.store.recipes = response.data;
@@ -80,9 +105,12 @@ retrieveRecipes() {
         .catch(e => {
           console.log(e);
         });
-    }
+    },
 
-  }
+  
+
+  },
+  
 
    }
 </script>
