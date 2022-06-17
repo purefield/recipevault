@@ -42,6 +42,8 @@ podman build  -t ui-recipevault -f Containerfile .
 
 podman build  -t quay.io/geoallen/ui-recipevault:1.0 -f Containerfile .
 
+podman tag  ui-recipevault quay.io/geoallen/ui-recipevault:1.1
+
 podman push quay.io/geoallen/ui-recipevault:1.0
 
 ## Deploy Image to OCP

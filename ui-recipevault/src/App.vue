@@ -1,35 +1,39 @@
 <template>
   <div id="app">
-    <div class="container">
-     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     
-          <div class="container-fluid">
-              <a href="#" class="navbar-brand" @click="retrieveRecipes">Recipe Vault (Quarkified)</a>
-          
-          <div class="collapse navbar-collapse">
-        
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRecipe">New Recipe</button>
-                 
-                </li>
-              </ul>
+    <div class="container">
+    
+     <nav class="navbar navbar-light bg-light">
 
-              <form class="d-flex">
-                 <input type="text" class="form-control" placeholder="Search by title" v-model="title"/>
-                 <div class="input-group-append">
-                 <button class="btn btn-outline-secondary" type="button"
+     
+
+    <div class="d-flex justify-content-start">
+       <a href="#" class="navbar-brand" @click="retrieveRecipes">Recipe Vault (Quarkified)</a>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <form class="d-flex justify-content-center">
+                 <input type="search" class="form-control" placeholder="Search by title" v-model="title"/>
+                 
+                 <button class="btn btn-outline-primary" type="button"
                    @click="searchTitle">
                      Search
                     </button>
-                    <button class="btn btn-outline-secondary" type="button"
+                    <button class="btn btn-outline-primary" type="button"
                    @click="retrieveRecipes">
                      Clear
                     </button>
-                    </div>
+                    
               </form>
-          </div>
-       </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRecipe">New Recipe</button>
+    </div>
+
+    
+    
+
       </nav>
   </div>
 
