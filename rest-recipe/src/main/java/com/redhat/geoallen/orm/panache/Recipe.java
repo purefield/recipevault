@@ -10,6 +10,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.UpdateTimestamp;
 
+
 import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -176,25 +177,15 @@ public class Recipe extends PanacheEntity {
 
     public static List<Recipe> searchTitle(String searchString){
 
-        
 
-        //EntityManager em = getEntityManager();
-        
         LOG.info("searchString: " + searchString);
 
         String searchInput = "%" + searchString + "%";
 
-        //Query q = em.createNativeQuery("SELECT * FROM Recipe r WHERE :ingredients = ANY(r.ingredients)", Recipe.class);
-        //q.setParameter("topics", searchString);
-        
-        return list("lower(title) like ?1", searchInput );
+        // simple case-insensitive queryr
+        return list("lower(title) like lower(?1)", searchInput );
 
-        //List<Recipe> recipeList = q.getResultList();
-        //return recipeList;
-
-        //return list("lower(title) like ?1", searchInput );
-
-        //return find("title", searchString).list();
+       
 
     }
 
