@@ -77,20 +77,21 @@ In this mode you can make changes to the code and have the changes immediately a
 # Run Tests
 
 ## Build Jar
-Build the Jar
+Build the Jar to deploy on OCP
 mvn clean package -DskipTests -Dquarkus.package.type=uber-jar
 
+Package for building image
 ./mvnw -DskipTests=true package
 
 # Build a container image:
 
 podman build -f src/main/docker/Dockerfile.jvm -t rest-recipe:1.0 .
 
-podman tag rest-recipe:1.0 quay.io/geoallen/rest-recipe:1.0
+podman tag rest-recipe:1.1 quay.io/geoallen/rest-recipe:1.1
 
 podman login quay.io
 
-podman push quay.io/geoallen/rest-recipe:1.0
+podman push quay.io/geoallen/rest-recipe:1.1
 
 ## Postgres
 
