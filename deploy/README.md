@@ -33,13 +33,21 @@ Update [s3 Secret](./s3-recipevault-secret.yaml) ACCESS KEY ID and SECRET
 
 # Deploy OCP Resources
 
-Update [rest-recipe-config.yaml](rest-recipe-config.yaml) with Bucket name and connection details
+Login to OCP and create or select project
 
-Update [recipevault-ui-config.yaml](recipevault-ui-config.yaml) REST Service endpoint and S3 Bucket Endpoint
+Update [./rest-recipe/rest-recipe-config.yaml](rest-recipe-config.yaml) with Bucket name and connection details
 
-Login to OCP and create or seledt project
+Deploy Recipe Rest Service
 
-Apply all resources to OCP
-`oc apply -f ./deploy`
+`oc apply -f ./rest-recipe/ . `
+
+Obtain the route 
+
+`oc get route' and update [./ui-recipevault/recipevault-ui-config.yaml](recipevault-ui-config.yaml) with REST Service endpoint and S3 Bucket Endpoint
+
+Deploy UI 
+
+Apply UI resources to OCP
+`oc apply -f ./ui-recipevault/ .`
 
 
