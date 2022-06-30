@@ -31,6 +31,10 @@ Using s3 command line tool of choice, apply the policy.
 
 Update [s3 Secret](./s3-recipevault-secret.yaml) ACCESS KEY ID and SECRET
 
+Deploy s3 secret
+
+`oc apply -f ./s3/s3-recipevault-secret.yaml`
+
 # Deploy OCP Resources
 
 Login to OCP and create or select project
@@ -49,5 +53,9 @@ Deploy UI
 
 Apply UI resources to OCP
 `oc apply -f ./ui-recipevault/ .`
+
+`oc get route ui-recipe`
+
+Access the UI and create recipes!!
 
 
