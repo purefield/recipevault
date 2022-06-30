@@ -29,7 +29,7 @@ Using s3 command line tool of choice, apply the policy.
 
 `s3cmd setpolicy public_s3.json s3://<BUCKET_NAME>`
 
-Update [s3 Secret](./s3-recipevault-secret.yaml) ACCESS KEY ID and SECRET
+Update [s3 Secret](./s3/s3-recipevault-secret.yaml) ACCESS KEY ID and SECRET
 
 Deploy s3 secret
 
@@ -39,15 +39,15 @@ Deploy s3 secret
 
 Login to OCP and create or select project
 
-Update [./rest-recipe/rest-recipe-config.yaml](rest-recipe-config.yaml) with Bucket name and connection details
+Update [rest-recipe-config.yaml](./rest-recipe/rest-recipe-config.yaml) with Bucket name and connection details
 
-Deploy Recipe Rest Service
+Deploy Recipe Rest Service and relatedd resources
 
 `oc apply -f ./rest-recipe/ . `
 
 Obtain the route 
 
-`oc get route' and update [./ui-recipevault/recipevault-ui-config.yaml](recipevault-ui-config.yaml) with REST Service endpoint and S3 Bucket Endpoint
+`oc get route' and update [recipevault-ui-config.yaml](./ui-recipevault/recipevault-ui-config.yaml) with REST Service endpoint and S3 Bucket Endpoint
 
 Deploy UI 
 
