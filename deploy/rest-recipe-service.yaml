@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: rest-recipe
+    app.kubernetes.io/component: rest-recipe
+    app.kubernetes.io/instance: rest-recipe
+    app.kubernetes.io/name: rest-recipe
+    app.kubernetes.io/part-of: recipe-vault
+    app.openshift.io/runtime-version: latest
+  name: rest-recipe
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: rest-recipe
+    deploymentconfig: rest-recipe
+  sessionAffinity: None
+  type: ClusterIP

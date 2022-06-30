@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: "false"
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"rest-recipe:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"rest-recipe\")].image","pause":"false"}]'
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: rest-recipe
+    app.kubernetes.io/component: rest-recipe
+    app.kubernetes.io/instance: rest-recipe
+    app.kubernetes.io/name: rest-recipe
+    app.kubernetes.io/part-of: recipe-vault
+  name: rest-recipe
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: rest-recipe
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      creationTimestamp: null
+      labels:
+        app: rest-recipe
+        deploymentconfig: rest-recipe
+    spec:
+      containers:
+      - env:
+        - name: quarkus.s3.aws.region
+          valueFrom:
+            configMapKeyRef:
+              key: quarkus.s3.aws.region
+              name: rest-recipe-config
+        - name: quarkus.s3.aws.credentials.type
+          valueFrom:
+            configMapKeyRef:
+              key: quarkus.s3.aws.credentials.type
+              name: rest-recipe-config
+        - name: bucket.name
+          valueFrom:
+            configMapKeyRef:
+              key: bucket.name
+              name: rest-recipe-config
+        - name: quarkus.s3.aws.credentials.static-provider.access-key-id
+          valueFrom:
+            secretKeyRef:
+              key: access-key-id
+              name: s3-recipevault
+        - name: quarkus.s3.aws.credentials.static-provider.secret-access-key
+          valueFrom:
+            secretKeyRef:
+              key: access-key
+              name: s3-recipevault
+        - name: quarkus.s3.endpoint-override
+          valueFrom:
+            configMapKeyRef:
+              key: quarkus.s3.endpoint-override
+              name: rest-recipe-config
+        image: quay.io/geoallen/rest-recipe
+        imagePullPolicy: Always
+        name: rest-recipe
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

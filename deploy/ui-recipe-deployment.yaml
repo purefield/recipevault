@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: "false"
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"ui-recipe:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"ui-recipe\")].image","pause":"false"}]'
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: ui-recipe
+    app.kubernetes.io/component: ui-recipe
+    app.kubernetes.io/instance: ui-recipe
+    app.kubernetes.io/name: ui-recipe
+    app.kubernetes.io/part-of: recipe-vault
+    app.openshift.io/runtime-namespace: geoallenrh-stage
+  name: ui-recipe
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: ui-recipe
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      creationTimestamp: null
+      labels:
+        app: ui-recipe
+        deploymentconfig: ui-recipe
+    spec:
+      containers:
+      - env:
+        - name: VUE_APP_IMAGE_SERVER_URL
+          valueFrom:
+            configMapKeyRef:
+              key: VUE_APP_IMAGE_SERVER_URL
+              name: recipevault-ui-config
+        - name: VUE_APP_RECIPE_DATA_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              key: VUE_APP_RECIPE_DATA_SERVICE
+              name: recipevault-ui-config
+        image:  quay.io/geoallen/ui-recipe
+        imagePullPolicy: Always
+        name: ui-recipe
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

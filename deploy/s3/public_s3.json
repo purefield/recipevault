@@ -6,7 +6,7 @@
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::geoallen.recipevault.dev.i-ad7cc188-3bc4-4f91-b413-3b802e7511e6/*"
+            "Resource": "arn:aws:s3:::<YOUR_BUCKET>/*"
         }
     ]
 }

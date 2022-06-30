@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  bucket.name: <BUCKET_NAME>
+  quarkus.s3.aws.credentials.type: static
+  quarkus.s3.aws.region: us-east-2
+  quarkus.s3.endpoint-override: https://s3.us-east-2.amazonaws.com
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/part-of: recipe-vault
+  name: rest-recipe-config

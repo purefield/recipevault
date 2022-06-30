@@ -1,0 +1,24 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: rest-recipe
+    app.kubernetes.io/component: rest-recipe
+    app.kubernetes.io/instance: rest-recipe
+    app.kubernetes.io/name: rest-recipe
+    app.kubernetes.io/part-of: recipe-vault
+    app.openshift.io/runtime-version: latest
+  name: rest-recipe
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: rest-recipe
+    weight: 100
+  wildcardPolicy: None
