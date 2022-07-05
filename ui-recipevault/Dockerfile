@@ -29,7 +29,7 @@ USER 1001
 # Let the assemble script to install the dependencies
 RUN /usr/libexec/s2i/assemble
 
-COPY .s2i/bin /usr/libexec/s2i
+COPY ./s2i/bin /usr/libexec/s2i
 
 # Run script uses standard ways to run the application
 CMD /usr/libexec/s2i/run
