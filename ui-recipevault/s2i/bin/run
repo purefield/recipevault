@@ -1,0 +1,30 @@
+#!/bin/bash
+
+########################################
+# Create a file based on the environment variables
+# given by the dockerc run -e parameter
+# - VUE_APP_ROOT
+# - VUE_APP_KEYCLOAK
+# - VUE_APP_WEBAPI
+########################################
+rm ~/env-config.js
+
+cat <<EOF >> ~/env-config.js
+window.VUE_APP_IMAGE_SERVER_URL="${VUE_APP_IMAGE_SERVER_URL}"
+window.VUE_APP_RECIPE_DATA_SERVICE="${VUE_APP_RECIPE_DATA_SERVICE}"
+EOF
+
+source /opt/app-root/etc/generate_container_user
+
+set -e
+
+source ${NGINX_CONTAINER_SCRIPTS_PATH}/common.sh
+
+process_extending_files ${NGINX_APP_ROOT}/src/nginx-start ${NGINX_CONTAINER_SCRIPTS_PATH}/nginx-start
+
+if [ ! -v NGINX_LOG_TO_VOLUME -a -v NGINX_LOG_PATH ]; then
+    /bin/ln -s /dev/stdout ${NGINX_LOG_PATH}/access.log
+    /bin/ln -s /dev/stderr ${NGINX_LOG_PATH}/error.log
+fi
+
+exec nginx -g "daemon off;"
