@@ -12,49 +12,49 @@ Recipe Vault is a Quarkus and Vue.js based Recipe Manager application
  -
 
 
-## Run on Openshift
+Tools required
+- S3 cli tool. I used S3 CMD - https://github.com/s3tools/s3cmd
+- jq - commandline JSON processor [version 1.6]
+- oc - OpenShift CLI
 
-# Deploy Postgres DB - There are multiple options. Here is the command to use the Persistent Template on OCP.
+### Create recipevault project
+`oc new-project recipevault`
 
-`oc new-app postgresql-persistent \
--p POSTGRESQL_USER=recipevault -p POSTGRESQL_PASSWORD=recipevault -p POSTGRESQL_DATABASE=recipevaultdb`
+### Deploy ODF and Configure Bucket
 
-# Provision S3 compatible Bucket and ensure objects are Read only for Anonymous. 
+- [ODF Install](./deploy/odf/README.md)
 
-# Modify Bucket Policy to Anonymous Read - Then the recipe images can be served from S3.
 
-Update [s3 Policy](./s3/public_s3.json) with your bucket name
+### Deploy Postgres DB (using template)
+`oc new-app --name=postgresql --template=postgresql-persistent \
+-p DATABASE_SERVICE_NAME=postgresql \
+-p POSTGRESQL_USER=recipevault \
+-p POSTGRESQL_PASSWORD=recipevault \
+-p POSTGRESQL_DATABASE=recipevaultdb `
 
-Using s3 command line tool of choice, apply the policy.
 
-`s3cmd setpolicy public_s3.json s3://<BUCKET_NAME>`
+### Deploy Recipe Rest Service
 
-Update [s3 Secret](./s3/s3-recipevault-secret.yaml) ACCESS KEY ID and SECRET
+Deploy app from existing image
 
-Deploy s3 secret
+Obtain and Apply S3 Route in [rest-recipe-deployment.yaml](./deploy/rest-recipe/rest-recipe-deployment.yaml)
 
-`oc apply -f ./s3/s3-recipevault-secret.yaml`
+`oc get route s3 -n openshift-storage -o json | jq -r '.spec.host'`
 
-# Deploy OCP Resources
+`oc apply -f ./deploy/rest-recipe/`
 
-Login to OCP and create or select project
+### Update Config Map
+Update VUE_APP_RECIPE_DATA_SERVICE with REST_RECIPE_ROUTE 
 
-Update [rest-recipe-config.yaml](./rest-recipe/rest-recipe-config.yaml) with Bucket name and connection details
+`oc get route/rest-recipe`
 
-Deploy Recipe Rest Service and relatedd resources
+Update VUE_APP_IMAGE_SERVER_URL with S3 Public Endpoint
 
-`oc apply -f ./rest-recipe/ . `
+`oc get route s3 -n openshift-storage -o json | jq -r '.spec.host`
 
-Obtain the route 
+Deploy app
 
-`oc get route' and update [recipevault-ui-config.yaml](./ui-recipevault/recipevault-ui-config.yaml) with REST Service endpoint and S3 Bucket Endpoint
-
-Deploy UI 
-
-Apply UI resources to OCP
-`oc apply -f ./ui-recipevault/ .`
-
-`oc get route ui-recipe`
+`oc apply -f ./deploy/ui-recipevault/`
 
 Access the UI and create recipes!!
 
