@@ -40,3 +40,4 @@ nb-configuration.xml
 .jpb
 **/deploy/k8s/gen
 .*.yaml
+.LESSONSLEARNED.MD
