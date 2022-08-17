@@ -26,11 +26,11 @@ Tools required
 
 
 ### Deploy Postgres DB (using template)
-`oc new-app --name=postgresql --template=postgresql-persistent \
+<code>oc new-app --name=postgresql --template=postgresql-persistent \
 -p DATABASE_SERVICE_NAME=postgresql \
 -p POSTGRESQL_USER=recipevault \
 -p POSTGRESQL_PASSWORD=recipevault \
--p POSTGRESQL_DATABASE=recipevaultdb `
+-p POSTGRESQL_DATABASE=recipevaultdb<code>
 
 
 ### Deploy Recipe Rest Service
