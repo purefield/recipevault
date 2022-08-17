@@ -22,7 +22,7 @@ Tools required
 
 ### Deploy ODF and Configure Bucket
 
-- [ODF Install](./deploy/odf/README.md)
+- [ODF Install](./odf/README.md)
 
 
 ### Deploy Postgres DB (using template)
