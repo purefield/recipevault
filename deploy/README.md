@@ -37,7 +37,7 @@ Tools required
 
 Deploy app from existing image
 
-Obtain and Apply S3 Route in [rest-recipe-deployment.yaml](./deploy/rest-recipe/rest-recipe-deployment.yaml)
+Obtain and Apply S3 Route in [rest-recipe-deployment.yaml](./rest-recipe/rest-recipe-deployment.yaml)
 
 `oc get route s3 -n openshift-storage -o json | jq -r '.spec.host'`
 
